@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 测试 -->
+<sqlMap namespace="cameraSql">
+    <typeAlias alias="cameraModel" type="cn.sh.ittc.model.CameraModel"/>
+    <typeAlias alias="cameraGrpModel" type="cn.sh.ittc.model.CameraGrpModel"/>
+    <typeAlias alias="nvrModel" type="cn.sh.ittc.model.NvrModel"/>
+    <!-- 查询所有的摄像机组 -->
+    <select id="getAllCameraGrp" resultClass="cameraGrpModel">
+        SELECT grpId id,grpName name,grpId,grpName,grpDesc FROM ittc_cameragrp 
+    </select>
+   
+   <!-- 根据组查询该组下的设备 -->
+   <select id="getCameraByGrp" resultClass="cameraModel" parameterClass="int">
+   		SELECT 
+   			ittc_camera_grp.id id,cameraName name,ittc_camera.cameraId,cameraName,cameraIp,cameraPort,cameraLoginName,cameraPwd,
+   			cameraMac,nvrIp,nvrPort,nvrLoginName,nvrLoginPwd,channelId
+		FROM ittc_camera
+		JOIN ittc_nvr_camera ON ittc_nvr_camera.cameraId=ittc_camera.cameraId
+		JOIN ittc_nvr ON ittc_nvr.nvrId=ittc_nvr_camera.nvrId
+		JOIN ittc_camera_grp ON ittc_camera_grp.cameraId=ittc_camera.cameraId
+		WHERE ittc_camera_grp.grpId=#int#
+   </select>
+   
+   <!-- 删除该组的下的设备 -->
+   <delete id="delGrpCameraById" parameterClass="int">
+   		DELETE FROM ittc_camera_grp
+   		WHERE id=#int# 
+   </delete>
+
+   <!-- 剪切摄像机 -->
+   <update id="cutCamera" parameterClass="java.util.HashMap">
+   		UPDATE ittc_camera_grp SET grpId=#grpId# WHERE id=#id#
+   </update>
+   
+   <!-- 复制摄像机 -->
+   <insert id="copyCamera" parameterClass="java.util.Map">
+   		INSERT INTO ittc_camera_grp (cameraId,grpId) VALUES(#cameraId#,#grpId#)
+   </insert>
+   <!-- 查询所有的NVR -->
+   <select id="queryAllNvr" resultClass="nvrModel">
+   		select * from ittc_nvr
+   </select>
+   
+   <!-- 查询所有的摄像机 -->
+   <select id="queryAllCamera" resultClass="cameraModel">
+   		<![CDATA[ 
+        	SELECT * FROM ittc_camera WHERE cameraIp<>'无'
+        ]]> 
+   </select>
+   
+   <!-- 添加摄像机 -->
+   <insert id="addCamera" parameterClass="cameraModel">
+   		INSERT INTO ittc_camera (cameraName,cameraIp,cameraPort,cameraLoginName,cameraPwd) VALUES(#cameraName#,#cameraIp#,#cameraPort#,#cameraLoginName#,#cameraPwd#)
+   		<selectKey resultClass="int" keyProperty="cameraId">
+			SELECT LAST_INSERT_ID()
+		</selectKey>
+   </insert>
+   <!-- 把摄像机添加到组 -->
+   <insert id="addCamera_grp" parameterClass="cameraModel">
+   		INSERT INTO ittc_camera_grp (cameraId,grpId) VALUES(#cameraId#,#grpId#)
+   </insert>
+   <!-- 把摄像机添加到NVR -->
+   <insert id="addCmaera2Nvr" parameterClass="cameraModel">
+   		INSERT INTO ittc_nvr_camera(nvrId,channelId,cameraId) VALUES(#nvrId#,#channelId#,#cameraId#)
+   </insert>
+   <!-- 根据组编号和摄像机编号查询是否存在 -->
+   <select id="queryCamera_grp" parameterClass="cameraModel" resultClass="int">
+   		SELECT id FROM ittc_camera_grp WHERE cameraId=#cameraId# AND grpId=#grpId#
+   </select>
+   
+   <!-- 根据组编号删除该组的摄像机 -->
+   <delete id="delCamera_grpByGrpId" parameterClass="cameraModel">
+   		DELETE FROM ittc_camera_grp
+   		WHERE grpId=#grpId# 
+   </delete>
+   
+   <!-- 根据摄像机组主键删除 -->
+   <delete id="delCameraGrpById" parameterClass="cameraModel">
+   		DELETE FROM ittc_cameragrp
+   		WHERE grpId=#grpId# 
+   </delete>
+   
+   <insert id="addCameraGrp" parameterClass="cameraGrpModel">
+   		INSERT INTO ittc_cameragrp(grpName,grpDesc) VALUES(#grpName#,#grpDesc#)
+   </insert>
+   
+   <!--重命名  -->
+   <update id="renameCamera" parameterClass="cameraModel">
+   		UPDATE ittc_camera SET cameraName=#cameraName# WHERE cameraId=#cameraId#
+   </update>
+   
+</sqlMap>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 测试 -->
+<sqlMap namespace="authority">
+    <typeAlias alias="userAuthorityModel" type="cn.sh.ittc.model.UserAuthorityModel"/>
+    <typeAlias alias="authorityModel" type="cn.sh.ittc.model.AuthorityModel"/>
+    
+    
+    <!-- 根据登录信息查询用户 -->
+    <select id="queryUserAuthority" resultClass="userAuthorityModel" parameterClass="userAuthorityModel">
+        SELECT * FROM ittc_user_authority WHERE userId=#userId#
+    </select>
+   <!-- 查询用户权限 -->
+   <insert id="addUserAuthority" parameterClass="userAuthorityModel">
+   		INSERT INTO ittc_user_authority
+   		(userId,authorityIds,cameraId,grpName)
+   		VALUES
+   		(#userId#,#authorityIds#,#cameraId#,#grpName#)
+   </insert>
+   <!-- 更新用户权限 -->
+   <update id="modifyUserAuthority" parameterClass="userAuthorityModel">
+   		UPDATE ittc_user_authority SET userId=#userId#
+   		<isNotEmpty prepend="," property="authorityIds">
+  			authorityIds=#authorityIds#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="," property="cameraId">
+  			cameraId=#cameraId#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="," property="grpName">
+  			grpName=#grpName#
+  		</isNotEmpty>
+  		WHERE id=#id#
+   </update>
+   
+   <!-- 查询权限明细 -->
+   <select id="queryAllAuthority" resultClass="authorityModel">
+   		SELECT * FROM ittc_authority
+   </select>
+   
+   <parameterMap class="map" id="userParam">
+   		<parameter property="userId_in" jdbcType="INT" javaType="java.lang.Integer" mode="IN"/>
+   		<parameter property="isUsed_in" jdbcType="BOOL" javaType="java.lang.Boolean" mode="IN"/>
+   </parameterMap>
+   
+   	<!-- 获取以及授权和为授权的摄像机组 -->
+  	<procedure id="getGrpCameraByUserId_p" parameterMap="userParam" resultClass="hashmap">
+  		{call getGrpCamera(?,?)}
+  	</procedure>
+   
+   <!-- 查询权限 -->
+   <select id="getAuthorityByUserId" parameterClass="int" resultClass="string">
+   		SELECT authorityIds FROM ittc_user_authority WHERE userId=#int# LIMIT 0,1
+   </select>
+   <!-- 根据用户Id删除用户权限 -->
+   <delete id="deleteUserAuthorityByUserId" parameterClass="int">
+   		DELETE FROM ittc_user_authority WHERE userId=#int#
+   </delete>
+   
+   <parameterMap class="map" id="copyParam">
+   		<parameter property="copyUserId" jdbcType="INT" javaType="java.lang.Integer" mode="IN"/>
+   		<parameter property="userId" jdbcType="INT" javaType="java.lang.Integer" mode="IN"/>
+   		
+   </parameterMap>
+   
+   <insert id="copyUserAuthority" parameterMap="copyParam">
+   		INSERT INTO ittc_user_authority(userId,authorityIds,cameraId,grpName)
+		SELECT ?,authorityIds,cameraId,grpName FROM ittc_user_authority WHERE userId=?
+   </insert>
+   
+</sqlMap>

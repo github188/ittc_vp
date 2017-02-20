@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+	<!-- Spring Action的注入 -->
+	<!--  
+	<bean id="testAction" class="cn.ittc.action.TestAction">
+	    <property name="testDao" ref="testDao"/>
+	</bean>
+	-->
+
+	<!-- ================================================= -->
+	<!-- =================action层  start ================== -->
+	<bean id="userAction" class="cn.sh.ittc.action.UserAction">
+		<property name="userService" ref="userService"/>
+	</bean>
+	<!-- 摄像机系列操作 -->
+	<bean id="cameraAction" class="cn.sh.ittc.action.CameraAction">
+		<property name="cameraService" ref="cameraService"></property>
+	</bean>
+	
+	<!-- 权限操作 -->
+	<bean id="authorityAction" class="cn.sh.ittc.action.AuthorityAction">
+		<property name="authorityService" ref="authorityService"></property>
+	</bean>
+	
+	<!-- 日志操作 -->
+	<bean id="logAction" class="cn.sh.ittc.action.LogAction">
+		<property name="logSearchService" ref="logSearchService"/>
+	</bean>
+	
+	<!-- 下载 -->
+	<bean id="download" class="cn.sh.ittc.action.FileDownloadAction">
+		<property name="userService" ref="userService"/>
+	</bean>
+	
+	<!-- ================================================= -->
+	<!-- =================action层  end   ================== -->
+	
+	
+	<!-- ================================================== -->
+	<!-- =================service层  start ================== -->
+	<!-- 登陆 -->
+	<bean id="userService" class="cn.sh.ittc.service.impl.UserService">
+		<property name="userDao" ref="userDao"/>
+	</bean>
+	<!-- 摄像机操作 -->
+	<bean id="cameraService" class="cn.sh.ittc.service.impl.CameraService">
+		<property name="cameraDao" ref="cameraDao"/>
+	</bean>
+	
+	<!-- 权限操作 -->
+	<bean id="authorityService" class="cn.sh.ittc.service.impl.AuthorityService">
+		<property name="authorityDao" ref="authorityDao"/>
+	</bean>
+	
+	<!-- 日志操作 -->
+	<bean id="logSearchService" class="cn.sh.ittc.service.impl.LogSearchService">
+		<property name="logSearchDao" ref="logSearchDao"/>
+	</bean>
+	
+	<!-- AOP 操作 -->
+	<bean id="aopService" class="cn.sh.ittc.service.impl.AopService">
+		<property name="logSearchDao" ref="logSearchDao"/>
+	</bean>
+	
+	<!-- ================================================== -->
+	<!-- =================service层  end===================== -->
+	
+</beans>

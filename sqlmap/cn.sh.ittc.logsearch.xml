@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 测试 -->
+<sqlMap namespace="logSql">
+    <typeAlias alias="sysLog" type="cn.sh.ittc.model.SysLogModel"/>
+    <typeAlias alias="warningLog" type="cn.sh.ittc.model.WarningLogModel"/>
+    
+    <!-- 查询系统日志 -->
+    <select id="getSysLog" resultClass="sysLog" parameterClass="sysLog">
+    	SELECT (@rownum := @rownum+1) AS id,grpName depName,userName,
+    	DATE_FORMAT(happenTime,'%Y-%m-%d %H:%i:%S') showTime,content 
+    	FROM $tableName$,(SELECT @rownum:=0) b WHERE 1=1
+    	<isNotEmpty  prepend="AND" property="depName">
+  			grpName LIKE '%$depName$%'
+  		</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="userName">
+    		userName LIKE '%userName%'
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="startTime">
+    		happenTime>=#startTime#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="endTime">
+    		<![CDATA[ 
+    		happenTime<=#endTime#
+    		]]> 
+    	</isNotEmpty>
+    	ORDER BY happenTime DESC 
+    	LIMIT #startPage#,#showNum#
+    </select>
+    <!-- 查询系统总数 -->
+    <select id="getSysCount" resultClass="int" parameterClass="sysLog">
+    	SELECT COUNT(*) FROM $tableName$
+    	 WHERE 1=1
+    	<isNotEmpty  prepend="AND" property="depName">
+  			grpName LIKE '%$depName$%'
+  		</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="userName">
+    		userName LIKE '%userName%'
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="startTime">
+    		happenTime>=#startTime#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="endTime">
+    		<![CDATA[ 
+    		happenTime<=#endTime#
+    		]]> 
+    	</isNotEmpty>
+    </select>
+    
+    <!-- 添加操作日志 -->
+    <insert id="addOperateLog" parameterClass="sysLog">
+    	INSERT INTO 
+    	ittc_operate_log
+    		(grpName,userName,happenTime,content)
+    	VALUES
+    		(#depName#,#userName#,NOW(),#content#)
+    </insert>
+
+	<!-- 报警总数 -->
+	<select id="getWarnCount" resultClass="int" parameterClass="warningLog">
+    	SELECT COUNT(*) FROM ittc_warning_log
+    	 WHERE 1=1
+    	<isNotEmpty  prepend="AND" property="warningType">
+  			grpName LIKE '%$warningType$%'
+  		</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="warningFrom">
+    		(
+    		warningFrom LIKE '%$warningFrom$%'
+    		OR
+    		content LIKE '%$warningFrom$%'
+    		OR
+    		cameraName LIKE '%$warningFrom$%'
+    		)
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="startTime">
+    		happenTime>=#startTime#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="endTime">
+    		<![CDATA[ 
+    		happenTime<=#endTime#
+    		]]> 
+    	</isNotEmpty>
+    </select>
+    
+    
+        <!-- 查询系统日志 -->
+    <select id="getWarnLog" resultClass="warningLog" parameterClass="warningLog">
+    	SELECT (@rownum := @rownum+1) AS id,warningFrom,
+    	DATE_FORMAT(happenTime,'%Y-%m-%d %H:%i:%S') showTime,
+    	CONCAT(cameraGrpName,cameraName,content) content
+    	FROM ittc_warning_log,(SELECT @rownum:=0) b WHERE 1=1
+    	<isNotEmpty  prepend="AND" property="warningType">
+  			grpName LIKE '%$warningType$%'
+  		</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="warningFrom">
+    		(
+    		warningFrom LIKE '%$warningFrom$%'
+    		OR
+    		content LIKE '%$warningFrom$%'
+    		OR
+    		cameraName LIKE '%$warningFrom$%'
+    		)
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="startTime">
+    		happenTime>=#startTime#
+    	</isNotEmpty>
+    	<isNotEmpty prepend="AND" property="endTime">
+    		<![CDATA[ 
+    		happenTime<=#endTime#
+    		]]> 
+    	</isNotEmpty>
+    	ORDER BY happenTime DESC 
+    	LIMIT #startPage#,#showNum#
+    </select>
+    
+</sqlMap>

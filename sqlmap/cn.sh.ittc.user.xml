@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 测试 -->
+<sqlMap namespace="userSql">
+    <typeAlias alias="userModel" type="cn.sh.ittc.model.UserModel"/>
+    <typeAlias alias="depModel" type="cn.sh.ittc.model.DepartmentModel"/>
+    <!-- 根据登录信息查询用户 -->
+    <select id="getUser" resultClass="userModel">
+        SELECT ittc_user.*,ittc_department.depName FROM ittc_user 
+        	JOIN ittc_department ON ittc_user.depId=ittc_department.depId
+        WHERE loginName=#user# AND ittc_user.isDel=0 AND userType=0
+    </select>
+   <!-- 查询所有的部门 -->
+   <select id="getAllDep" resultClass="depModel">
+   		SELECT * FROM ittc_department WHERE isDel=0
+   </select>
+    <!-- 根据部门查询该部门的成员 -->
+    <select id="getUserByDep" resultClass="userModel" parameterClass="userModel">
+    	 SELECT (@rownum := @rownum+1) AS rownum,a.* FROM ittc_user a,(SELECT @rownum:=0) b 
+    	 WHERE depId=#depId# AND isDel=0 LIMIT #startPage#,#showNum#
+    </select>
+    
+    <!-- 根据部门查询该部门的总人数 -->
+    <select id="getUserCountByDep" resultClass="int" parameterClass="int">
+    	SELECT COUNT(*) FROM ittc_user  WHERE depId=#int# AND isDel=0
+    </select>
+  	
+  	<!-- 更新用户信息 -->
+  	<update id="modifyUser" parameterClass="userModel">
+  		UPDATE ittc_user SET userId=#userId#
+  		<isNotEmpty prepend="," property="loginName">
+  			loginName=#loginName#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="," property="loginPwd">
+  			loginPwd=#loginPwd#
+  		</isNotEmpty>
+  		<isNotEmpty prepend="," property="userName">
+  			userName=#userName#
+  		</isNotEmpty>
+  		<isNotEqual prepend="," compareValue="1" property="isDel">
+  			userType=#userType#
+  		</isNotEqual>
+  		<isNotEqual prepend="," compareValue="1" property="isDel">
+  			depId=#depId#
+  		</isNotEqual>
+  		<isNotEqual prepend="," compareValue="0" property="isDel">
+  			isDel=#isDel# 
+  		</isNotEqual>
+  		WHERE userId=#userId#
+  	</update>
+  	
+  	<update id="initPwd" parameterClass="userModel">
+  		UPDATE ittc_user SET loginPwd=#loginPwd# WHERE userId=#userId#
+  	</update>
+  	
+  	<update id="delUser" parameterClass="userModel">
+  		UPDATE ittc_user SET isDel=1  WHERE userId=#userId#
+  	</update>
+  	
+  	<!-- 非物理删除部门及部门下的成员
+  	<update id="delDepById2" parameterClass="depModel">
+  		UPDATE ittc_department a,ittc_user b SET a.isDel=1,b.isDel=1 WHERE a.depId=#depId# AND b.depId=#depId#
+  	</update>
+  	 -->
+  	<update id="delDepById" parameterClass="depModel">
+  		 UPDATE ittc_department a SET a.isDel=1 WHERE a.depId=#depId# 
+  	</update>
+  	<update id="delUserByDepId" parameterClass="depModel">
+  		UPDATE ittc_user  SET isDel=1 WHERE depId=#depId# 
+  	</update>
+  	
+  	<!-- 添加部门 -->
+  	<insert id="addDep" parameterClass="depModel">
+  		INSERT INTO ittc_department(depName,depDesc) VALUES(#depName#,#depDesc#)
+  	</insert>
+  
+  	<!-- 添加用户 -->
+  	<insert id="addUser" parameterClass="userModel">
+  		INSERT INTO ittc_user(loginName,loginPwd,userName,userType,depId) VALUES(#loginName#,#loginPwd#,#userName#,#userType#,#depId#)
+  	</insert>
+  	
+  	<!--根据主键查询用户信息  -->
+  	<select id="getUserById" parameterClass="int" resultClass="userModel">
+  		SELECT userId,loginName,userName,userType,depId FROM ittc_user WHERE userId=#int#
+  	</select>
+  	
+  	<!-- 获取部门以及部门成员 -->
+  	<procedure id="getDepUser_p" resultClass="hashmap">
+  		{call getDepUser()}
+  	</procedure>
+</sqlMap>

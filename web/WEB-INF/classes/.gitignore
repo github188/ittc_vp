@@ -1,0 +1,13 @@
+/applicationContext-action.xml
+/applicationContext-aop.xml
+/applicationContext-dao.xml
+/applicationContext-ibatis.xml
+/cn/
+/cn.ittc.mytest.xml
+/cn.sh.ittc.authority.xml
+/cn.sh.ittc.camera.xml
+/cn.sh.ittc.logsearch.xml
+/cn.sh.ittc.user.xml
+/datasource/
+/log4j.properties
+/struts.xml

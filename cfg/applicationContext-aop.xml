@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>   
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xsi:schemaLocation="   
+            http://www.springframework.org/schema/beans   
+            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd   
+            http://www.springframework.org/schema/aop   
+            http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">   
+   
+    <aop:aspectj-autoproxy/>
+    <!-- 登陆 -->
+    <bean id="loginLog" class="cn.sh.ittc.aop.LoginLog">
+    	<property name="aopService" ref="aopService"/>
+    </bean>
+    	
+    <aop:config>   
+        
+        <!-- 登陆 -->
+        <aop:aspect id="loginAspect" ref="loginLog">
+            <aop:pointcut id="businessService" expression="execution(* cn.sh.ittc.service.impl.*.*(..))" />
+            <aop:before pointcut-ref="businessService" method="doBefore"/>  
+            <aop:after pointcut-ref="businessService" method="doAfter"/>  
+          	<aop:around pointcut-ref="businessService" method="doAround"/>
+            <!--异常通知  --> 
+            <aop:after-throwing pointcut-ref="businessService" method="doThrowing" throwing="ex"/>  
+           
+        </aop:aspect>
+
+    </aop:config>   
+</beans>  

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<!-- 测试 -->
+<sqlMap namespace="test">
+    <typeAlias alias="test" type="cn.ittc.model.TestModel"/>
+    <!-- 根据登录信息查询用户 -->
+    <select id="getTest" resultClass="hashmap">
+        SELECT * FROM pg_aggregate t 
+    </select>
+   
+    <!--  
+    <parameterMap class="java.util.Map" id="find_state_p">
+        <parameter property="statenum" jdbcType="NUMBER" javaType="java.lang.Integer" mode="IN" />
+        <parameter property="statename" jdbcType="VARCHAR" javaType="java.lang.String" mode="OUT"/>
+    </parameterMap>
+    <procedure id="find_state" parameterMap="find_state_p" resultClass="string">
+        {call FIND_STATENAME(?,?)}
+    </procedure>
+    -->
+</sqlMap>

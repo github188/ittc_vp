@@ -1,0 +1,104 @@
+/*组菜单*/
+#main #main_left{
+	float: left;
+	width: 250px;
+	height: 667px;
+	background-image: url("../images/usermgr/main_left_bg.jpg");
+	}
+	/*实时时间*/
+#main_left .main_time{
+	background-image: url("../images/usermgr/time_bg.png");
+	width: 200px;
+	height: 72px;
+	margin-left: 25px;
+}
+/*实时日期*/
+#main_left .main_time .time_time{
+	height:40px;
+	line-height:45px;
+	overflow:hidden;
+	font-size: 22pt;
+}
+/*组别列表*/
+#main_left #left_list{
+	width: 250px;
+	height: 580px;
+	float: left;
+}
+#left_list #list_zb{
+	float: left;
+	height: 50px;
+	width: 239px;
+}
+#left_list #list_ul{
+	float: left;
+	width: 239px;
+}
+#main_left #left_list ul{
+	margin: 0px;
+	padding: 0px;
+}
+#main_left #left_list ul li{
+	list-style:none;
+	height: 55px;
+	width: 239px;
+	background-image: url('../images/usermgr/z_bg.jpg');
+}
+#main_left #left_list ul li font{
+	font-size:14px;
+	line-height: 55px;
+}
+#main_left #left_list ul li .grpbtn{
+	float:right;
+	width: 70px;
+	margin-right: 27px;
+	margin-top:16px;
+	display: none;
+}
+#main_padding{
+	width: 40px;
+	height: 675px;
+	float: left;
+}
+#main_right{
+	width: 840px;
+	height: 675px;
+	float: left;
+}
+#main_right .right_btn{
+	width: 820px;
+	height: 50px;
+	float: left;
+	margin-top: 30px;
+}
+#main_right .right_btn ul{
+	float: left;
+	margin: 0;
+	padding: 0;
+}
+#main_right .right_btn ul li{
+	list-style:none;
+	float: left;
+	margin-right: 15px;
+}
+#main_right .right_table{
+	float:left;
+	width: 834px;
+	height:585px; 
+	background-image: url('../images/usermgr/right_bg.jpg');
+}
+#main_right .right_table table{
+	margin-top:35px;
+	width: 830px;
+}
+#main_right .right_table table tbody tr{
+	height: 37px;
+}
+#main_right .table_page{
+float:left;
+	width: 830px;
+	margin-top: -40px;
+}
+#main_right .table_page table{
+	width: 830px;
+}

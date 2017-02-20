@@ -1,0 +1,17 @@
+1.action配置约定 说明
+1.1.action_{1}_{2}_{3}_{4}.action:表示普通的action,具体如action_LoginAction_login.action
+	{1}表示cn.sh.ittc.action包的类名,如LoginAction;
+	{2}表示{1}中的处理方法;
+	{3}表示执行成功跳转的页面;
+	{4}表示执行失败跳转的页面,
+1.2.json_{1}_{2}.action表示Ajax异步交换的action,具体如json_{1}_{2}
+	{1}表示cn.sh.ittc.action包的类名,如LoginAction;
+	{2}表示{1}中的处理方法;
+1.3.jstree的json格式参照	_json_data.json中的格式
+2.错误代码说明
+0：
+1：用户不存在
+2：密码错误
+3：没有权限
+4：
+5：
